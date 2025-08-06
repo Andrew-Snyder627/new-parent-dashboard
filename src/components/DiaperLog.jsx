@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-function DiaperLog() {
-  // Ran into LocalStorage not saving beyond refresh, lazy load resolved the issue.
+function DiaperLog({ preview = false }) {
   const [entries, setEntries] = useState(() => {
     const saved = localStorage.getItem("babyLog");
     return saved ? JSON.parse(saved) : [];
   });
+
   const [type, setType] = useState("diaper");
   const [subtype, setSubtype] = useState("");
   const [note, setNote] = useState("");
 
-  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("babyLog", JSON.stringify(entries));
   }, [entries]);
@@ -31,6 +31,38 @@ function DiaperLog() {
 
   const formatTime = (iso) => new Date(iso).toLocaleString();
 
+  // === PREVIEW MODE ===
+  if (preview) {
+    const recent = entries.slice(0, 3);
+    return (
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "1rem",
+          borderRadius: "8px",
+        }}
+      >
+        <h3>Diaper & Feeding Log</h3>
+        {recent.length === 0 ? (
+          <p>No entries logged.</p>
+        ) : (
+          <ul>
+            {recent.map((entry) => (
+              <li key={entry.id}>
+                <strong>{formatTime(entry.timestamp)}</strong> — {entry.type} (
+                {entry.subtype}){entry.note && <em> — {entry.note}</em>}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/log">View Full Log</Link>
+        </div>
+      </div>
+    );
+  }
+
+  // === FULL VIEW ===
   return (
     <div>
       <h2>Diaper & Feeding Log</h2>

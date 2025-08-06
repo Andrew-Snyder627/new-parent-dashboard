@@ -3,6 +3,7 @@ import QuoteBox from "../components/QuoteBox";
 import TodoList from "../components/TodoList";
 import NewsFeed from "./NewsFeed";
 import VaccineSchedule from "./VaccineSchedule";
+import DiaperLog from "./DiaperLog";
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function Home() {
         <TodoList preview />
         <NewsFeed preview />
         <VaccineSchedule preview />
+        <DiaperLog preview />
         {/* Insert other preview components here later */}
       </div>
     </div>
