@@ -9,25 +9,9 @@ import QuoteBox from "./QuoteBox";
 
 function Dashboard() {
   return (
-    <div className="dashboard-grid">
-      <div className="dashboard-panel">
-        <NewsFeed />
-      </div>
-      <div className="dashboard-panel">
-        <VaccineSchedule />
-      </div>
-      <div className="dashboard-panel">
-        <DiaperLog />
-      </div>
-      <div className="dashboard-panel">
-        <MilestoneTracker />
-      </div>
-      <div className="dashboard-panel">
-        <TodoList />
-      </div>
-      <div className="dashboard-panel">
-        <QuoteBox />
-      </div>
+    <div>
+      <h1>Welcome to the New Parent Resource Finder</h1>
+      <p>Use the navigation above to access tools and resources.</p>
     </div>
   );
 }
