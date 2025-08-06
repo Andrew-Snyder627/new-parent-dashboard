@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 
-function TodoList() {
+// Shared styles
+const cardStyle = {
+  border: "1px solid #ccc",
+  padding: "1rem",
+  borderRadius: "8px",
+};
+
+function TodoList({ preview = false }) {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("parentTodoList");
     return saved ? JSON.parse(saved) : [];
@@ -12,27 +20,56 @@ function TodoList() {
     localStorage.setItem("parentTodoList", JSON.stringify(tasks));
   }, [tasks]);
 
-  const handleAddTask = (e) => {
-    e.preventDefault();
-    const trimmed = newTask.trim();
-    if (trimmed) {
-      setTasks([{ id: Date.now(), text: trimmed, done: false }, ...tasks]);
-      setNewTask("");
-    }
-  };
+  const handleAddTask = useCallback(
+    (e) => {
+      e.preventDefault();
+      const trimmed = newTask.trim();
+      if (trimmed) {
+        setTasks([{ id: Date.now(), text: trimmed, done: false }, ...tasks]);
+        setNewTask("");
+      }
+    },
+    [newTask, tasks]
+  );
 
-  const toggleTask = (id) => {
+  const toggleTask = useCallback((id) => {
     setTasks((prev) =>
       prev.map((task) =>
         task.id === id ? { ...task, done: !task.done } : task
       )
     );
-  };
+  }, []);
 
-  const deleteTask = (id) => {
+  const deleteTask = useCallback((id) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
-  };
+  }, []);
 
+  // === PREVIEW MODE ===
+  if (preview) {
+    const topTasks = tasks.slice(0, 3);
+    return (
+      <div style={cardStyle}>
+        <h3>Parenting To-Do List</h3>
+        {topTasks.length === 0 ? (
+          <p>No tasks yet.</p>
+        ) : (
+          <ul>
+            {topTasks.map((task) => (
+              <li key={task.id}>
+                <input type="checkbox" checked={task.done} readOnly />
+                {` ${task.text}`}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/todos">View Full To-Do List</Link>
+        </div>
+      </div>
+    );
+  }
+
+  // === FULL VIEW ===
   return (
     <div>
       <h2>Parenting To-Do List</h2>
@@ -73,4 +110,4 @@ function TodoList() {
   );
 }
 
-export default TodoList;
+export default React.memo(TodoList);

@@ -1,5 +1,6 @@
 import React from "react";
 import QuoteBox from "../components/QuoteBox";
+import TodoList from "../components/TodoList";
 
 function Home() {
   return (
@@ -15,6 +16,7 @@ function Home() {
         }}
       >
         <QuoteBox preview />
+        <TodoList preview />
         {/* Insert other preview components here later */}
       </div>
     </div>
