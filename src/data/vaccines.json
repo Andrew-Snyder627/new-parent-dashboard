@@ -1,0 +1,56 @@
+[
+  {
+    "age": "Birth",
+    "vaccines": ["HepB (1st dose)"]
+  },
+  {
+    "age": "1–2 months",
+    "vaccines": ["HepB (2nd dose)"]
+  },
+  {
+    "age": "2 months",
+    "vaccines": [
+      "DTaP (1st dose)",
+      "Hib (1st dose)",
+      "IPV (1st dose)",
+      "PCV13 (1st dose)",
+      "RV (1st dose)"
+    ]
+  },
+  {
+    "age": "4 months",
+    "vaccines": [
+      "DTaP (2nd dose)",
+      "Hib (2nd dose)",
+      "IPV (2nd dose)",
+      "PCV13 (2nd dose)",
+      "RV (2nd dose)"
+    ]
+  },
+  {
+    "age": "6 months",
+    "vaccines": [
+      "DTaP (3rd dose)",
+      "Hib (3rd dose)",
+      "IPV (3rd dose)",
+      "PCV13 (3rd dose)",
+      "RV (3rd dose)",
+      "Flu (yearly, start at 6 mo)",
+      "HepB (3rd dose)"
+    ]
+  },
+  {
+    "age": "9 months",
+    "vaccines": ["Flu (2nd dose, if first time)"]
+  },
+  {
+    "age": "12 months",
+    "vaccines": [
+      "MMR (1st dose)",
+      "Varicella (1st dose)",
+      "HepA (1st dose)",
+      "Hib (booster)",
+      "PCV13 (booster)"
+    ]
+  }
+]
