@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import defaultMilestones from "../data/milestones.json";
 
-function MilestoneTracker() {
+function MilestoneTracker({ preview = false }) {
   const [completed, setCompleted] = useState(() => {
     const saved = localStorage.getItem("milestoneChecklist");
     return saved ? JSON.parse(saved) : {};
@@ -43,6 +44,38 @@ function MilestoneTracker() {
 
   const allMilestones = [...defaultMilestones, ...customMilestones];
 
+  // === PREVIEW MODE ===
+  if (preview) {
+    const recent = allMilestones.slice(0, 4); // Show 4 milestones as a preview
+    return (
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "1rem",
+          borderRadius: "8px",
+        }}
+      >
+        <h3>Milestone Tracker</h3>
+        <ul>
+          {recent.map((milestone) => (
+            <li key={milestone}>
+              <input
+                type="checkbox"
+                checked={!!completed[milestone]}
+                readOnly
+              />
+              {` ${milestone}`}
+            </li>
+          ))}
+        </ul>
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/milestones">View All Milestones</Link>
+        </div>
+      </div>
+    );
+  }
+
+  // === FULL VIEW ===
   return (
     <div>
       <h2>Milestone Tracker</h2>

@@ -1,6 +1,8 @@
 import React from "react";
 import QuoteBox from "../components/QuoteBox";
 import TodoList from "../components/TodoList";
+import NewsFeed from "./NewsFeed";
+import VaccineSchedule from "./VaccineSchedule";
 
 function Home() {
   return (
@@ -17,6 +19,8 @@ function Home() {
       >
         <QuoteBox preview />
         <TodoList preview />
+        <NewsFeed preview />
+        <VaccineSchedule preview />
         {/* Insert other preview components here later */}
       </div>
     </div>

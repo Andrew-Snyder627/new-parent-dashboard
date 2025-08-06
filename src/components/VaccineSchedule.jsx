@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import vaccineData from "../data/vaccines.json";
 
-function VaccineSchedule() {
+function VaccineSchedule({ preview = false }) {
   const [checked, setChecked] = useState(() => {
     const saved = localStorage.getItem("vaccineChecklist");
     return saved ? JSON.parse(saved) : {};
   });
 
-  // Save checkmarks to localStorage
   useEffect(() => {
     localStorage.setItem("vaccineChecklist", JSON.stringify(checked));
   }, [checked]);
@@ -19,6 +19,43 @@ function VaccineSchedule() {
     }));
   };
 
+  // === PREVIEW MODE ===
+  if (preview) {
+    const previewData = vaccineData.slice(0, 2); // Show first 2 age groups
+
+    return (
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "1rem",
+          borderRadius: "8px",
+        }}
+      >
+        <h3>Vaccination Preview</h3>
+        {previewData.map((entry) => (
+          <div key={entry.age} style={{ marginBottom: "0.75rem" }}>
+            <strong>{entry.age}</strong>
+            <ul>
+              {entry.vaccines.map((vaccine) => {
+                const key = `${entry.age}-${vaccine}`;
+                return (
+                  <li key={key}>
+                    <input type="checkbox" checked={!!checked[key]} readOnly />
+                    {` ${vaccine}`}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/vaccines">View Full Vaccine Schedule</Link>
+        </div>
+      </div>
+    );
+  }
+
+  // === FULL VIEW ===
   return (
     <div>
       <h2>Vaccination Checklist</h2>
@@ -33,7 +70,7 @@ function VaccineSchedule() {
                   <label>
                     <input
                       type="checkbox"
-                      checked={!!checked[key]} // Coerces value to true/false for checkbox (prevents uncontrolled warnings)
+                      checked={!!checked[key]}
                       onChange={() => handleChange(entry.age, vaccine)}
                     />
                     {` ${vaccine}`}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function NewsFeed() {
+function NewsFeed({ preview = false }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,6 +31,52 @@ function NewsFeed() {
     fetchNews();
   }, [apiKey]);
 
+  // === PREVIEW MODE ===
+  if (preview) {
+    const topArticles = articles.slice(0, 2); // Show first 2 articles
+
+    return (
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "1rem",
+          borderRadius: "8px",
+        }}
+      >
+        <h3>Parenting News Preview</h3>
+
+        {loading && <p>Loading preview...</p>}
+        {error && <p style={{ color: "red" }}>Error: {error}</p>}
+
+        {!loading && !error && topArticles.length === 0 && (
+          <p>No articles available.</p>
+        )}
+
+        {!loading && !error && (
+          <ul>
+            {topArticles.map((article, index) => (
+              <li key={index} style={{ marginBottom: "0.75rem" }}>
+                <a href={article.url} target="_blank" rel="noopener noreferrer">
+                  <strong>{article.title}</strong>
+                </a>
+                <br />
+                <small>
+                  {article.source.name} –{" "}
+                  {new Date(article.publishedAt).toLocaleDateString()}
+                </small>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/news">View Full News Feed</Link>
+        </div>
+      </div>
+    );
+  }
+
+  // === FULL VIEW ===
   return (
     <div>
       <h2>Parenting News Feed</h2>
