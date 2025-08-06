@@ -1,41 +1,32 @@
-import React, { useState, useEffect } from "react";
-import localQuotes from "../data/parenting_quotes.json";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import quotes from "../data/parenting_quotes.json";
 
-function QuoteBox() {
+function QuoteBox({ preview = false }) {
   const [quote, setQuote] = useState(null);
 
-  const getRandomQuote = () => {
-    const random = localQuotes[Math.floor(Math.random() * localQuotes.length)];
-    setQuote(random);
-  };
-
   useEffect(() => {
-    getRandomQuote(); // get one on load
+    const random = quotes[Math.floor(Math.random() * quotes.length)];
+    setQuote(random);
   }, []);
 
+  if (!quote) return <p>Loading...</p>;
+
   return (
-    <div>
-      <h2>Daily Inspiration</h2>
-
-      {quote && (
-        <blockquote style={{ fontStyle: "italic" }}>
-          “{quote.quote}”
-          <br />
-          <span
-            style={{
-              display: "block",
-              textAlign: "right",
-              marginTop: "0.5rem",
-            }}
-          >
-            — {quote.author}
-          </span>
-        </blockquote>
+    <div
+      style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}
+    >
+      <h3>Daily Inspiration</h3>
+      <blockquote style={{ fontStyle: "italic", margin: "0.5rem 0" }}>
+        “{quote.quote}”
+        <br />
+        <small>— {quote.author}</small>
+      </blockquote>
+      {preview && (
+        <div style={{ marginTop: "0.5rem" }}>
+          <Link to="/quotes">View More Quotes</Link>
+        </div>
       )}
-
-      <button onClick={getRandomQuote} style={{ marginTop: "1rem" }}>
-        New Quote
-      </button>
     </div>
   );
 }

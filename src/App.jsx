@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
+import Home from "./components/Home";
 import NewsFeed from "./components/NewsFeed";
 import VaccineSchedule from "./components/VaccineSchedule";
 import DiaperLog from "./components/DiaperLog";
@@ -13,7 +13,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
         <Route path="/news" element={<NewsFeed />} />
         <Route path="/vaccines" element={<VaccineSchedule />} />
         <Route path="/log" element={<DiaperLog />} />

@@ -7,7 +7,7 @@ function Navbar() {
         style={{ listStyle: "none", display: "flex", gap: "1rem", padding: 0 }}
       >
         <li>
-          <Link to="/">Dashboard</Link>
+          <Link to="/">Home</Link>
         </li>
         <li>
           <Link to="/news">News</Link>
