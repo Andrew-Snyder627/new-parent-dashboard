@@ -1,29 +1,98 @@
 import React from "react";
-import QuoteBox from "../components/QuoteBox";
-import TodoList from "../components/TodoList";
+import styles from "../styles/Home.module.css";
+import CardShell from "./ui/CardShell";
+import QuoteBox from "./QuoteBox";
 import NewsFeed from "./NewsFeed";
+import TodoList from "./TodoList";
+import MilestoneTracker from "./MilestoneTracker";
 import VaccineSchedule from "./VaccineSchedule";
 import DiaperLog from "./DiaperLog";
+import { Button } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 function Home() {
   return (
-    <div className="home-dashboard" style={{ padding: "2rem" }}>
-      <h1>Welcome, New Parent!</h1>
-      <div
-        className="dashboard-grid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "1.5rem",
-          marginTop: "2rem",
-        }}
-      >
-        <QuoteBox preview />
-        <TodoList preview />
-        <NewsFeed preview />
-        <VaccineSchedule preview />
-        <DiaperLog preview />
-        {/* Insert other preview components here later */}
+    <div className={styles.container}>
+      <h1 style={{ marginBottom: 16 }}>Welcome, New Parent!</h1>
+
+      <div className={styles.grid}>
+        <div className={styles.card}>
+          <CardShell
+            title="Daily Inspiration"
+            footer={
+              <Button component={RouterLink} to="/quotes">
+                View More
+              </Button>
+            }
+          >
+            <QuoteBox preview />
+          </CardShell>
+        </div>
+
+        <div className={`${styles.card} ${styles.cardWide}`}>
+          <CardShell
+            title="Parenting News"
+            footer={
+              <Button component={RouterLink} to="/news">
+                View Full News Feed
+              </Button>
+            }
+          >
+            <NewsFeed preview />
+          </CardShell>
+        </div>
+
+        <div className={styles.card}>
+          <CardShell
+            title="To-Do List"
+            footer={
+              <Button component={RouterLink} to="/todos">
+                View Full To-Do
+              </Button>
+            }
+          >
+            <TodoList preview />
+          </CardShell>
+        </div>
+
+        <div className={styles.card}>
+          <CardShell
+            title="Milestones"
+            footer={
+              <Button component={RouterLink} to="/milestones">
+                View All Milestones
+              </Button>
+            }
+          >
+            <MilestoneTracker preview />
+          </CardShell>
+        </div>
+
+        <div className={styles.card}>
+          <CardShell
+            title="Vaccinations"
+            footer={
+              <Button component={RouterLink} to="/vaccines">
+                View Full Schedule
+              </Button>
+            }
+          >
+            <VaccineSchedule preview />
+          </CardShell>
+        </div>
+
+        <div className={styles.card}>
+          <CardShell
+            title="Recent Log"
+            footer={
+              <Button component={RouterLink} to="/log">
+                View Full Log
+              </Button>
+            }
+          >
+            <DiaperLog preview />
+          </CardShell>
+        </div>
       </div>
     </div>
   );

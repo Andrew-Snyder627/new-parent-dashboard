@@ -1,10 +1,17 @@
 # New Parent Resource Finder 👶🍼
 
-A React dashboard designed to support new parents with helpful tools and information. Features include a parenting news feed, vaccination checklist, diaper and feeding log, milestone tracker, to-do list, and daily inspirational quotes.
+A React dashboard designed to support new parents with helpful tools and information. Features include a parenting news feed, vaccination checklist, diaper and feeding log, milestone tracker, to-do list, and daily inspirational quotes — all accessible via dedicated routes or as previews on the homepage.
 
 ---
 
 ## 🚀 Features
+
+### ✅ Routing + Dashboard Preview
+
+- All major features have **dedicated routes** (`/news`, `/vaccines`, `/log`, etc.)
+- The homepage (`/`) acts as a **dashboard**, showing **preview versions** of each tool
+- Each preview offers a "View More" button to navigate to the full version
+- Enhances navigation, reuse, and user experience
 
 ### ✅ Parenting News Feed
 
@@ -40,7 +47,7 @@ A React dashboard designed to support new parents with helpful tools and informa
 ### ✅ Daily Inspiration
 
 - Displays a randomly selected parenting/inspirational quote from a local JSON file
-- Refresh for a new quote
+- Does not change on route navigation thanks to `useRef` caching
 - Fast and offline-friendly
 
 ---
@@ -48,7 +55,7 @@ A React dashboard designed to support new parents with helpful tools and informa
 ## 🛠️ Tech Stack
 
 - React (with Hooks and functional components)
-- React Router DOM
+- React Router DOM (for routing and navigation)
 - Vite (development server + bundler)
 - `localStorage` for persistence
 - CSS (Dashboard layout coming in next iteration)
@@ -61,7 +68,7 @@ A React dashboard designed to support new parents with helpful tools and informa
 src/
 │
 ├── components/
-│   ├── Dashboard.jsx
+│   ├── Home.jsx             // Dashboard-style landing with previews
 │   ├── NewsFeed.jsx
 │   ├── VaccineSchedule.jsx
 │   ├── DiaperLog.jsx
@@ -74,7 +81,7 @@ src/
 │   ├── milestones.json
 │   └── parenting_quotes.json
 │
-├── App.jsx
+├── App.jsx                 // Routing structure
 ├── main.jsx
 └── App.css
 ```
@@ -104,6 +111,7 @@ src/
    ```
 
 4. Start the dev server
+
    ```bash
    npm run dev
    ```
@@ -125,6 +133,7 @@ src/
 
 - [x] Integrated third-party API (NewsAPI)
 - [x] Built in React with multiple views/components
+- [x] React Router navigation and dashboard with preview rendering
 - [x] Dynamic fetch + loading/error state handling
 - [x] LocalStorage used for persistent features
 - [x] Clearly defined problem and audience
