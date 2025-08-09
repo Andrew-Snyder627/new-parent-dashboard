@@ -1,6 +1,8 @@
 # New Parent Resource Finder 👶🍼
 
-A React dashboard designed to support new parents with helpful tools and information. Features include a parenting news feed, vaccination checklist, diaper and feeding log, milestone tracker, to-do list, and daily inspirational quotes — all accessible via dedicated routes or as previews on the homepage.
+A modern React dashboard designed to support new parents with helpful tools and information. Features include a parenting news feed, vaccination checklist, diaper and feeding log, milestone tracker, to-do list, and daily inspirational quotes — all accessible via dedicated routes or as previews on the homepage.
+
+Recent updates include **Material UI (MUI)** integration for a clean, professional, and consistent interface, with enhanced layouts, interactive components, and modern styling across all tools.
 
 ---
 
@@ -8,57 +10,61 @@ A React dashboard designed to support new parents with helpful tools and informa
 
 ### ✅ Routing + Dashboard Preview
 
-- All major features have **dedicated routes** (`/news`, `/vaccines`, `/log`, etc.)
-- The homepage (`/`) acts as a **dashboard**, showing **preview versions** of each tool
-- Each preview offers a "View More" button to navigate to the full version
-- Enhances navigation, reuse, and user experience
+- All major features have **dedicated routes** (`/news`, `/vaccines`, `/log`, `/milestones`, `/todos`, `/quotes`).
+- The homepage (`/`) acts as a **dashboard**, showing **preview versions** of each tool.
+- Each preview offers a **“View More”** button to navigate to the full version.
+- Shared `Page.module.css` styles ensure consistent spacing and typography across pages.
 
 ### ✅ Parenting News Feed
 
-- Pulls live articles using [NewsAPI](https://newsapi.org/)
-- Filters news by relevant keywords like "infant", "parenting", and "childcare"
-- Shows headline, source, snippet, and link to full article
+- Pulls live articles using [NewsAPI](https://newsapi.org/).
+- Filters news by parenting-focused keywords.
+- **Preview**: top 2 headlines on the dashboard.
+- **Full page**: source chip, date, description, and **Load More** pagination.
+- UI uses **MUI**: `Paper`, `Stack`, `Divider`, `Chip`, `Typography`, `Button`.
 
 ### ✅ Vaccination Checklist
 
-- Displays CDC-recommended vaccines for the first year of life
-- Organized by age (birth to 12 months)
-- Check off completed vaccines
-- Persists data with `localStorage`
+- First-year schedule organized by age (birth → 12 months).
+- Check off vaccines; persists via `localStorage`.
+- UI uses **MUI Table** (`Table`, `TableHead`, `TableBody`, `TableRow`, `TableCell`) and `Checkbox`.
 
 ### ✅ Diaper & Feeding Log
 
-- Log diaper changes and feedings with time, type, and notes
-- View a full history of entries
-- Stored locally for persistent tracking
+- Log entries with time, type (diaper/feeding), and notes; persistent history in `localStorage`.
+- UI uses **MUI Form** inputs and **MUI Table** for the history list.
 
 ### ✅ Milestone Tracker
 
-- Track baby's development milestones
-- Add your own custom milestones
-- Check off milestones as they’re reached
-- Persists both checklist and custom data in `localStorage`
+- Track default milestones and add custom ones; completion persisted in `localStorage`.
+- Grouped into buckets: **0–3**, **4–6**, **7–9**, **10–12 months**.
+- UI uses **MUI Accordion** (`Accordion`, `AccordionSummary`, `AccordionDetails`) + `Checkbox`.
+- Preview shows recent milestones in a compact list.
 
 ### ✅ To-Do List
 
-- Add, complete, and delete parenting-related tasks
-- Simple, fast, persistent daily tracker
+- Add, toggle-complete, and delete tasks; persisted in `localStorage`.
+- UI uses **MUI List** (`List`, `ListItem`, `ListItemText`, `Checkbox`) and `DeleteIcon`.
+- Preview shows top 3 tasks.
 
 ### ✅ Daily Inspiration
 
-- Displays a randomly selected parenting/inspirational quote from a local JSON file
-- Does not change on route navigation thanks to `useRef` caching
-- Fast and offline-friendly
+- Random quote from local JSON; stable across navigation via `useRef`.
+- Full page is **searchable** and **paginated**.
+- UI uses **MUI**: `Paper`, `Stack`, `Divider`, `TextField`, `Button`, `Typography`.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- React (with Hooks and functional components)
-- React Router DOM (for routing and navigation)
-- Vite (development server + bundler)
-- `localStorage` for persistence
-- CSS (Dashboard layout coming in next iteration)
+- **React** (Hooks + functional components)
+- **React Router DOM** (routing and navigation)
+- **Material UI (MUI)**
+  - Core: `Paper`, `Stack`, `Divider`, `Typography`, `Button`, `TextField`, `Checkbox`, `Chip`, `List`, `Accordion`, `Table`
+  - Icons: `DeleteIcon`, `ExpandMoreIcon`
+- **Vite** (dev server + bundler)
+- **CSS Modules** (`Page.module.css`) for shared page-level styles
+- **localStorage** for client-side persistence
 
 ---
 
@@ -67,23 +73,37 @@ A React dashboard designed to support new parents with helpful tools and informa
 ```
 src/
 │
+├── assets/                     // Static assets (images, icons, etc.)
+│
 ├── components/
-│   ├── Home.jsx             // Dashboard-style landing with previews
-│   ├── NewsFeed.jsx
-│   ├── VaccineSchedule.jsx
-│   ├── DiaperLog.jsx
-│   ├── MilestoneTracker.jsx
-│   ├── TodoList.jsx
-│   └── QuoteBox.jsx
+│   ├── DiaperLog.jsx           // MUI form + table for diaper/feeding tracking
+│   ├── Home.jsx                // Dashboard-style landing with previews
+│   ├── MilestoneTracker.jsx    // MUI accordions for milestone tracking
+│   ├── Navbar.jsx              // MUI AppBar with navigation links
+│   ├── NewsFeed.jsx            // MUI-styled news feed with preview/full modes
+│   ├── QuoteBox.jsx            // Preview card for daily inspirational quote
+│   ├── Quotes.jsx              // Searchable + paginated quotes in MUI Paper
+│   ├── TodoList.jsx            // MUI list with checkboxes + delete
+│   └── VaccineSchedule.jsx     // MUI-styled vaccine table
 │
 ├── data/
-│   ├── vaccines.json
 │   ├── milestones.json
-│   └── parenting_quotes.json
+│   ├── parenting_quotes.json
+│   └── vaccines.json
 │
-├── App.jsx                 // Routing structure
-├── main.jsx
-└── App.css
+├── styles/
+│   ├── CardShell.module.css    // Styling for reusable card component
+│   ├── Home.module.css         // Dashboard grid and layout styles
+│   └── Page.module.css         // Shared page-level styles for consistent layout
+│
+├── ui/
+│   └── CardShell.jsx           // Reusable MUI Paper card wrapper for previews
+│
+├── App.css                     // Global CSS overrides
+├── App.jsx                     // Routing structure + top-level layout
+├── index.css                   // Base styles
+├── main.jsx                    // Entry point
+└── theme.js                    // MUI theme customization
 ```
 
 ---
@@ -121,11 +141,17 @@ src/
 ## 🚧 Known Issues / In Progress
 
 - Some public APIs (like Quotable) failed due to certificate issues — switched to a local quote file for MVP.
-- Dashboard styling (layout, responsiveness) will be implemented in the next iteration.
+- Initial dashboard styling was minimal; upgraded to Material UI (MUI) components for a modern, responsive look.
+- Challenges during styling updates included:
+  - Integrating MUI `Paper`, `Stack`, `Typography`, `Button`, and `Table` while keeping consistent spacing and layout.
+  - Ensuring individual feature pages (NewsFeed, Milestone Tracker, To-Do List, Quotes) each had a clean, cohesive design while still feeling unique.
+  - Managing responsive design for both preview cards and full-page views.
 - Future plans include:
   - Milestone date tracking
   - Sleep log and feeding timer
   - Optional authentication (to sync data across devices)
+  - Dark mode theme toggle
+  - Additional animations and transitions for a smoother UX
 
 ---
 
@@ -136,6 +162,8 @@ src/
 - [x] React Router navigation and dashboard with preview rendering
 - [x] Dynamic fetch + loading/error state handling
 - [x] LocalStorage used for persistent features
+- [x] Upgraded to Material UI for professional, modern styling
+- [x] Consistent layout patterns using MUI `Paper`, `Stack`, `Typography`, and `Button`
 - [x] Clearly defined problem and audience
 - [x] Clean, modular codebase with reusable components
 
@@ -143,9 +171,11 @@ src/
 
 ## 🧠 Problem + Solution
 
-**Problem:** New parents are overwhelmed and need a central place to track key activities and access trusted information. Most tools are bloated or spread across apps.
+**Problem:**  
+New parents are overwhelmed and need a central place to track key activities and access trusted information. Most tools are bloated, poorly designed, or spread across multiple apps. Even when features are available, they are often not presented in a way that feels clean and easy to use.
 
-**Solution:** A single-page dashboard with all essential tools — news, checklists, logs, and quotes — all accessible offline and without sign-in.
+**Solution:**  
+A single-page dashboard with all essential tools — news, checklists, logs, and quotes — all accessible offline and without sign-in. The interface was styled with Material UI to provide a clean, professional, and responsive layout that’s easy to navigate. Using MUI’s prebuilt components ensured design consistency, while custom CSS Modules allowed for unique visual identity across different pages.
 
 ---
 
