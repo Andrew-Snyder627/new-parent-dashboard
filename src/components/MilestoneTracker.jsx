@@ -1,47 +1,46 @@
 import React, { useState, useEffect } from "react";
+import styles from "../styles/Page.module.css";
 import defaultMilestones from "../data/milestones.json";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Button,
+  Stack,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-/**
- * Age buckets mapped to your current milestones.
- * Adjust the sets as needed.
- */
 const BUCKETS = {
-  "0–3 months": new Set(["First smile"]),
-  "4–6 months": new Set(["Rolls over", "Sits up", "Sleeps through the night"]),
-  "7–9 months": new Set(["Crawling", "Pulls to stand", "Feeds self"]),
-  "10–12 months": new Set(["First steps", "Waves goodbye", "First word"]),
+  "0-3 months": new Set(["First smile"]),
+  "4-6 months": new Set(["Rolls over", "Sits up", "Sleeps through the night"]),
+  "7-9 months": new Set(["Crawling", "Pulls to stand", "Feeds self"]),
+  "10-12 months": new Set(["First steps", "Waves goodbye", "First word"]),
 };
 
 function MilestoneTracker({ preview = false }) {
-  // Completed status map: { "First smile": true, ... }
   const [completed, setCompleted] = useState(() => {
     const saved = localStorage.getItem("milestoneChecklist");
     return saved ? JSON.parse(saved) : {};
   });
-
-  // User-added milestones
   const [customMilestones, setCustomMilestones] = useState(() => {
     const saved = localStorage.getItem("customMilestones");
     return saved ? JSON.parse(saved) : [];
   });
-
   const [newMilestone, setNewMilestone] = useState("");
 
-  // Persist to localStorage
   useEffect(() => {
     localStorage.setItem("milestoneChecklist", JSON.stringify(completed));
   }, [completed]);
-
   useEffect(() => {
     localStorage.setItem("customMilestones", JSON.stringify(customMilestones));
   }, [customMilestones]);
 
-  const toggleMilestone = (milestone) => {
-    setCompleted((prev) => ({
-      ...prev,
-      [milestone]: !prev[milestone],
-    }));
-  };
+  const toggleMilestone = (m) =>
+    setCompleted((prev) => ({ ...prev, [m]: !prev[m] }));
 
   const handleAddMilestone = (e) => {
     e.preventDefault();
@@ -55,89 +54,102 @@ function MilestoneTracker({ preview = false }) {
     }
   };
 
-  // Combine defaults + custom
-  const allMilestones = [...defaultMilestones, ...customMilestones];
+  const all = [...defaultMilestones, ...customMilestones];
 
-  // ===== PREVIEW (Home dashboard tile) =====
   if (preview) {
-    const recent = allMilestones.slice(0, 4);
+    const recent = all.slice(0, 4);
     return recent.length === 0 ? (
-      <p style={{ margin: 0 }}>No milestones yet.</p>
+      <Typography sx={{ m: 0 }}>No milestones yet.</Typography>
     ) : (
-      <ul style={{ margin: 0, paddingLeft: 18 }}>
+      <Stack>
         {recent.map((m) => (
-          <li key={m}>
-            <input type="checkbox" checked={!!completed[m]} readOnly /> {m}
-          </li>
+          <FormControlLabel
+            key={m}
+            control={<Checkbox checked={!!completed[m]} readOnly />}
+            label={m}
+          />
         ))}
-      </ul>
+      </Stack>
     );
   }
 
-  // ===== FULL PAGE (grouped by buckets) =====
+  // group by buckets
   const grouped = Object.entries(BUCKETS).reduce((acc, [label, set]) => {
-    acc[label] = allMilestones.filter((m) => set.has(m));
+    acc[label] = all.filter((m) => set.has(m));
     return acc;
   }, {});
-
-  // Anything not caught by buckets goes to "Other" (custom/unmatched items)
   const matched = new Set(Object.values(grouped).flat());
-  const other = allMilestones.filter((m) => !matched.has(m));
+  const other = all.filter((m) => !matched.has(m));
 
   return (
-    <div>
-      <h2>Milestone Tracker</h2>
+    <div className={styles.container}>
+      <Typography variant="h4" className={styles.header}>
+        Milestone Tracker
+      </Typography>
 
-      <form onSubmit={handleAddMilestone} style={{ marginBottom: "1rem" }}>
-        <input
-          type="text"
-          value={newMilestone}
-          onChange={(e) => setNewMilestone(e.target.value)}
-          placeholder="Add a new milestone"
-        />
-        <button type="submit">Add</button>
+      <form onSubmit={handleAddMilestone} style={{ marginBottom: 16 }}>
+        <Stack direction="row" spacing={1}>
+          <TextField
+            size="small"
+            label="Add a new milestone"
+            value={newMilestone}
+            onChange={(e) => setNewMilestone(e.target.value)}
+          />
+          <Button type="submit" variant="contained">
+            Add
+          </Button>
+        </Stack>
       </form>
 
-      {Object.entries(grouped).map(([label, items]) =>
-        items.length > 0 ? (
-          <section key={label} style={{ marginBottom: "1rem" }}>
-            <h4 style={{ margin: "8px 0" }}>{label}</h4>
-            <ul>
-              {items.map((m) => (
-                <li key={m}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={!!completed[m]}
-                      onChange={() => toggleMilestone(m)}
-                    />{" "}
-                    {m}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null
+      {Object.entries(grouped).map(
+        ([label, items]) =>
+          items.length > 0 && (
+            <Accordion key={label} defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontWeight={600}>{label}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack>
+                  {items.map((m) => (
+                    <FormControlLabel
+                      key={m}
+                      control={
+                        <Checkbox
+                          checked={!!completed[m]}
+                          onChange={() => toggleMilestone(m)}
+                        />
+                      }
+                      label={m}
+                    />
+                  ))}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          )
       )}
 
       {other.length > 0 && (
-        <section>
-          <h4 style={{ margin: "8px 0" }}>Other</h4>
-          <ul>
-            {other.map((m) => (
-              <li key={m}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={!!completed[m]}
-                    onChange={() => toggleMilestone(m)}
-                  />{" "}
-                  {m}
-                </label>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography fontWeight={600}>Other</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack>
+              {other.map((m) => (
+                <FormControlLabel
+                  key={m}
+                  control={
+                    <Checkbox
+                      checked={!!completed[m]}
+                      onChange={() => toggleMilestone(m)}
+                    />
+                  }
+                  label={m}
+                />
+              ))}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
       )}
     </div>
   );

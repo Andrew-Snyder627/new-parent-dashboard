@@ -1,6 +1,14 @@
 import React, { useMemo, useState } from "react";
+import styles from "../styles/Page.module.css";
 import quotes from "../data/parenting_quotes.json";
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Stack,
+  Paper,
+  Typography,
+  Divider,
+} from "@mui/material";
 
 const PAGE = 20;
 
@@ -20,31 +28,45 @@ export default function Quotes() {
   const visible = filtered.slice(0, count);
 
   return (
-    <div>
-      <h2>Quotes</h2>
-      <TextField
-        label="Search quotes or author"
-        size="small"
-        value={term}
-        onChange={(e) => {
-          setTerm(e.target.value);
-          setCount(PAGE);
-        }}
-        style={{ marginBottom: 12, maxWidth: 400 }}
-      />
-      <ul>
-        {visible.map((q, i) => (
-          <li key={`${q.quote}-${i}`} style={{ marginBottom: 10 }}>
-            <em>“{q.quote}”</em>
-            <br />
-            <small>— {q.author}</small>
-          </li>
-        ))}
-      </ul>
+    <div className={styles.container}>
+      <Typography variant="h4" className={styles.header}>
+        Quotes
+      </Typography>
+
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <TextField
+          label="Search quotes or author"
+          size="small"
+          value={term}
+          onChange={(e) => {
+            setTerm(e.target.value);
+            setCount(PAGE);
+          }}
+          sx={{ maxWidth: 420 }}
+        />
+      </Stack>
+
+      <Paper variant="outlined">
+        <Stack divider={<Divider />} sx={{ p: 2 }}>
+          {visible.map((q, i) => (
+            <div key={`${q.quote}-${i}`}>
+              <Typography variant="body1" sx={{ fontStyle: "italic" }}>
+                “{q.quote}”
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                — {q.author}
+              </Typography>
+            </div>
+          ))}
+        </Stack>
+      </Paper>
+
       {count < filtered.length && (
-        <Button variant="contained" onClick={() => setCount((c) => c + PAGE)}>
-          Show more
-        </Button>
+        <Stack alignItems="center" sx={{ mt: 2 }}>
+          <Button variant="contained" onClick={() => setCount((c) => c + PAGE)}>
+            Show more
+          </Button>
+        </Stack>
       )}
     </div>
   );

@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import styles from "../styles/Page.module.css";
+import {
+  Box,
+  Button,
+  Divider,
+  Stack,
+  Typography,
+  Link as MuiLink,
+  Chip,
+  Paper,
+} from "@mui/material";
 
 function NewsFeed({ preview = false }) {
   const [articles, setArticles] = useState([]);
@@ -35,61 +45,106 @@ function NewsFeed({ preview = false }) {
 
   if (preview) {
     const top = articles.slice(0, 2);
-    if (loading) return <p style={{ margin: 0 }}>Loading preview...</p>;
-    if (error) return <p style={{ color: "red", margin: 0 }}>Error: {error}</p>;
-    if (!top.length) return <p style={{ margin: 0 }}>No articles available.</p>;
+    if (loading)
+      return <Typography sx={{ m: 0 }}>Loading preview...</Typography>;
+    if (error)
+      return (
+        <Typography color="error" sx={{ m: 0 }}>
+          Error: {error}
+        </Typography>
+      );
+    if (!top.length)
+      return <Typography sx={{ m: 0 }}>No articles available.</Typography>;
+
     return (
-      <ul style={{ margin: 0, paddingLeft: 18 }}>
+      <Stack spacing={1}>
         {top.map((a, i) => (
-          <li key={`${a.url}-${i}`} style={{ marginBottom: 8 }}>
-            <a href={a.url} target="_blank" rel="noopener noreferrer">
-              <strong>{a.title}</strong>
-            </a>
-            <br />
-            <small>
-              {a.source.name} – {new Date(a.publishedAt).toLocaleDateString()}
-            </small>
-          </li>
+          <Box key={`${a.url}-${i}`}>
+            <MuiLink
+              href={a.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="hover"
+            >
+              <Typography variant="subtitle1" fontWeight={600}>
+                {a.title}
+              </Typography>
+            </MuiLink>
+            <Typography variant="caption" color="text.secondary">
+              {a.source.name} • {new Date(a.publishedAt).toLocaleDateString()}
+            </Typography>
+          </Box>
         ))}
-      </ul>
+      </Stack>
     );
   }
 
   // FULL PAGE
   return (
-    <div>
-      <h2>Parenting News Feed</h2>
-      {loading && articles.length === 0 && <p>Loading articles...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+    <div className={styles.container}>
+      <Typography variant="h4" className={styles.header}>
+        Parenting News Feed
+      </Typography>
 
-      <ul>
-        {articles.map((a, i) => (
-          <li key={`${a.url}-${i}`} style={{ marginBottom: "1rem" }}>
-            <strong>{a.title}</strong>
-            <br />
-            <em>
-              {a.source.name} - {new Date(a.publishedAt).toLocaleDateString()}
-            </em>
-            <p>{a.description}</p>
-            <a href={a.url} target="_blank" rel="noopener noreferrer">
-              Read more →
-            </a>
-          </li>
-        ))}
-      </ul>
+      {loading && articles.length === 0 && (
+        <Typography>Loading articles...</Typography>
+      )}
+      {error && <Typography color="error">Error: {error}</Typography>}
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          const next = page + 1;
-          setPage(next);
-          fetchNews(next);
-        }}
-        disabled={loading}
-      >
-        {loading ? "Loading..." : "Load more"}
-      </Button>
+      <Paper variant="outlined" sx={{ p: 2 }}>
+        <Stack divider={<Divider />} spacing={2}>
+          {articles.map((a, i) => (
+            <Box key={`${a.url}-${i}`}>
+              <MuiLink
+                href={a.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                underline="hover"
+              >
+                <Typography variant="h6" fontWeight={700} sx={{ mb: 0.5 }}>
+                  {a.title}
+                </Typography>
+              </MuiLink>
+
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                sx={{ mb: 1 }}
+              >
+                <Chip size="small" label={a.source.name} />
+                <Typography variant="caption" color="text.secondary">
+                  {new Date(a.publishedAt).toLocaleDateString()}
+                </Typography>
+              </Stack>
+
+              {a.description && (
+                <Typography variant="body2" sx={{ mb: 0.5 }}>
+                  {a.description}
+                </Typography>
+              )}
+
+              <MuiLink href={a.url} target="_blank" rel="noopener noreferrer">
+                Read more →
+              </MuiLink>
+            </Box>
+          ))}
+        </Stack>
+
+        <Box sx={{ mt: 2, textAlign: "center" }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              const next = page + 1;
+              setPage(next);
+              fetchNews(next);
+            }}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Load more"}
+          </Button>
+        </Box>
+      </Paper>
     </div>
   );
 }

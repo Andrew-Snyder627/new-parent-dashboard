@@ -1,4 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
+import styles from "../styles/Page.module.css";
+import {
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function TodoList({ preview = false }) {
   const [tasks, setTasks] = useState(() => {
@@ -35,51 +50,86 @@ function TodoList({ preview = false }) {
 
   if (preview) {
     const top = tasks.slice(0, 3);
-    if (!top.length) return <p style={{ margin: 0 }}>No tasks yet.</p>;
+    if (!top.length)
+      return <Typography sx={{ m: 0 }}>No tasks yet.</Typography>;
     return (
-      <ul style={{ margin: 0, paddingLeft: 18 }}>
+      <List dense sx={{ py: 0 }}>
         {top.map((t) => (
-          <li key={t.id}>
-            <input type="checkbox" checked={t.done} readOnly /> {t.text}
-          </li>
+          <ListItem key={t.id} disableGutters>
+            <ListItemIcon sx={{ minWidth: 32 }}>
+              <Checkbox
+                edge="start"
+                checked={t.done}
+                tabIndex={-1}
+                disableRipple
+                readOnly
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary={t.text}
+              primaryTypographyProps={{
+                sx: { textDecoration: t.done ? "line-through" : "none" },
+              }}
+            />
+          </ListItem>
         ))}
-      </ul>
+      </List>
     );
   }
 
-  // Full page
+  // full page
   return (
-    <div>
-      <h2>Parenting To-Do List</h2>
-      <form onSubmit={handleAddTask} style={{ marginBottom: "1rem" }}>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add new task"
-        />
-        <button type="submit">Add</button>
+    <div className={styles.container}>
+      <Typography variant="h4" className={styles.header}>
+        Parenting To-Do List
+      </Typography>
+
+      <form onSubmit={handleAddTask} style={{ marginBottom: 16 }}>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <TextField
+            size="small"
+            label="Add new task"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+          />
+          <Button type="submit" variant="contained">
+            Add
+          </Button>
+        </Stack>
       </form>
-      <ul>
-        {tasks.map((t) => (
-          <li key={t.id} style={{ marginBottom: "0.5rem" }}>
-            <label style={{ textDecoration: t.done ? "line-through" : "none" }}>
-              <input
-                type="checkbox"
-                checked={t.done}
-                onChange={() => toggleTask(t.id)}
-              />{" "}
-              {t.text}
-            </label>
-            <button
-              onClick={() => deleteTask(t.id)}
-              style={{ marginLeft: "0.5rem" }}
+
+      <Paper variant="outlined">
+        <List>
+          {tasks.map((t) => (
+            <ListItem
+              key={t.id}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTask(t.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
             >
-              ❌
-            </button>
-          </li>
-        ))}
-      </ul>
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <Checkbox
+                  edge="start"
+                  checked={t.done}
+                  onChange={() => toggleTask(t.id)}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary={t.text}
+                primaryTypographyProps={{
+                  sx: { textDecoration: t.done ? "line-through" : "none" },
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     </div>
   );
 }
