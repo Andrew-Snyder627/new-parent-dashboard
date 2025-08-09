@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/CardShell.module.css";
+import styles from "../styles/CardShell.module.css";
 
 const CardShell = ({ title, children, footer }) => {
   return (

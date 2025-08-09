@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import vaccineData from "../data/vaccines.json";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+} from "@mui/material";
 
 function VaccineSchedule({ preview = false }) {
   const [checked, setChecked] = useState(() => {
@@ -19,68 +28,72 @@ function VaccineSchedule({ preview = false }) {
     }));
   };
 
-  // === PREVIEW MODE ===
   if (preview) {
-    const previewData = vaccineData.slice(0, 2); // Show first 2 age groups
-
+    const previewData = vaccineData.slice(0, 2);
     return (
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "1rem",
-          borderRadius: "8px",
-        }}
-      >
-        <h3>Vaccination Preview</h3>
+      <div style={{ margin: 0 }}>
         {previewData.map((entry) => (
-          <div key={entry.age} style={{ marginBottom: "0.75rem" }}>
+          <div key={entry.age} style={{ marginBottom: 8 }}>
             <strong>{entry.age}</strong>
-            <ul>
-              {entry.vaccines.map((vaccine) => {
-                const key = `${entry.age}-${vaccine}`;
+            <ul style={{ margin: "4px 0 0 18px" }}>
+              {entry.vaccines.map((v) => {
+                const key = `${entry.age}-${v}`;
                 return (
                   <li key={key}>
-                    <input type="checkbox" checked={!!checked[key]} readOnly />
-                    {` ${vaccine}`}
+                    <input type="checkbox" checked={!!checked[key]} readOnly />{" "}
+                    {v}
                   </li>
                 );
               })}
             </ul>
           </div>
         ))}
-        <div style={{ marginTop: "0.5rem" }}>
-          <Link to="/vaccines">View Full Vaccine Schedule</Link>
-        </div>
       </div>
     );
   }
 
-  // === FULL VIEW ===
+  // FULL PAGE — TABLE
   return (
     <div>
       <h2>Vaccination Checklist</h2>
-      {vaccineData.map((entry) => (
-        <div key={entry.age} style={{ marginBottom: "1rem" }}>
-          <h4>{entry.age}</h4>
-          <ul>
-            {entry.vaccines.map((vaccine) => {
-              const key = `${entry.age}-${vaccine}`;
-              return (
-                <li key={key}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={!!checked[key]}
-                      onChange={() => handleChange(entry.age, vaccine)}
-                    />
-                    {` ${vaccine}`}
-                  </label>
-                </li>
-              );
+      <TableContainer component={Paper} elevation={0}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Age</TableCell>
+              <TableCell>Vaccine</TableCell>
+              <TableCell align="center">Done</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {vaccineData.map((group) => {
+              const { age, vaccines } = group;
+              return vaccines.map((v, idx) => {
+                const key = `${age}-${v}`;
+                return (
+                  <TableRow key={key}>
+                    {idx === 0 && (
+                      <TableCell
+                        rowSpan={vaccines.length}
+                        sx={{ fontWeight: 600 }}
+                      >
+                        {age}
+                      </TableCell>
+                    )}
+                    <TableCell>{v}</TableCell>
+                    <TableCell align="center">
+                      <Checkbox
+                        checked={!!checked[key]}
+                        onChange={() => handleChange(age, v)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              });
             })}
-          </ul>
-        </div>
-      ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

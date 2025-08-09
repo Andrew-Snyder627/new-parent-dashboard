@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../styles/Home.module.css";
-import CardShell from "./ui/CardShell";
+import CardShell from "../ui/CardShell";
 import QuoteBox from "./QuoteBox";
 import NewsFeed from "./NewsFeed";
 import TodoList from "./TodoList";
@@ -16,7 +16,7 @@ function Home() {
       <h1 style={{ marginBottom: 16 }}>Welcome, New Parent!</h1>
 
       <div className={styles.grid}>
-        <div className={styles.card}>
+        <div className={styles.areaQuote}>
           <CardShell
             title="Daily Inspiration"
             footer={
@@ -29,7 +29,7 @@ function Home() {
           </CardShell>
         </div>
 
-        <div className={`${styles.card} ${styles.cardWide}`}>
+        <div className={styles.areaNews}>
           <CardShell
             title="Parenting News"
             footer={
@@ -42,7 +42,7 @@ function Home() {
           </CardShell>
         </div>
 
-        <div className={styles.card}>
+        <div className={styles.areaTodo}>
           <CardShell
             title="To-Do List"
             footer={
@@ -55,7 +55,7 @@ function Home() {
           </CardShell>
         </div>
 
-        <div className={styles.card}>
+        <div className={styles.areaMilestones}>
           <CardShell
             title="Milestones"
             footer={
@@ -68,7 +68,7 @@ function Home() {
           </CardShell>
         </div>
 
-        <div className={styles.card}>
+        <div className={styles.areaVaccines}>
           <CardShell
             title="Vaccinations"
             footer={
@@ -81,7 +81,7 @@ function Home() {
           </CardShell>
         </div>
 
-        <div className={styles.card}>
+        <div className={styles.areaLog}>
           <CardShell
             title="Recent Log"
             footer={

@@ -10,26 +10,46 @@
   grid-template-columns: repeat(12, 1fr);
 }
 
-.card {
+/* desktop layout (>= 1100px) */
+.areaQuote {
+  grid-column: span 4;
+} /* left column */
+.areaNews {
+  grid-column: span 8;
+} /* wide on right */
+.areaTodo {
   grid-column: span 4;
 }
-
-.cardWide {
-  grid-column: span 6;
+.areaMilestones {
+  grid-column: span 4;
 }
+.areaVaccines {
+  grid-column: span 4;
+}
+.areaLog {
+  grid-column: span 12;
+} /* full width row at bottom */
 
 @media (max-width: 1100px) {
-  .card {
+  .areaQuote,
+  .areaTodo,
+  .areaMilestones,
+  .areaVaccines {
     grid-column: span 6;
   }
-  .cardWide {
+  .areaNews,
+  .areaLog {
     grid-column: span 12;
   }
 }
 
 @media (max-width: 700px) {
-  .card,
-  .cardWide {
+  .areaQuote,
+  .areaNews,
+  .areaTodo,
+  .areaMilestones,
+  .areaVaccines,
+  .areaLog {
     grid-column: span 12;
   }
 }

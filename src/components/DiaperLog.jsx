@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
 
 function DiaperLog({ preview = false }) {
   const [entries, setEntries] = useState(() => {
     const saved = localStorage.getItem("babyLog");
     return saved ? JSON.parse(saved) : [];
   });
-
   const [type, setType] = useState("diaper");
   const [subtype, setSubtype] = useState("");
   const [note, setNote] = useState("");
@@ -31,84 +42,89 @@ function DiaperLog({ preview = false }) {
 
   const formatTime = (iso) => new Date(iso).toLocaleString();
 
-  // === PREVIEW MODE ===
   if (preview) {
     const recent = entries.slice(0, 3);
+    if (!recent.length) return <p style={{ margin: 0 }}>No entries logged.</p>;
     return (
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "1rem",
-          borderRadius: "8px",
-        }}
-      >
-        <h3>Diaper & Feeding Log</h3>
-        {recent.length === 0 ? (
-          <p>No entries logged.</p>
-        ) : (
-          <ul>
-            {recent.map((entry) => (
-              <li key={entry.id}>
-                <strong>{formatTime(entry.timestamp)}</strong> — {entry.type} (
-                {entry.subtype}){entry.note && <em> — {entry.note}</em>}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div style={{ marginTop: "0.5rem" }}>
-          <Link to="/log">View Full Log</Link>
-        </div>
-      </div>
+      <ul style={{ margin: 0, paddingLeft: 18 }}>
+        {recent.map((e) => (
+          <li key={e.id}>
+            <strong>{formatTime(e.timestamp)}</strong> — {e.type} ({e.subtype})
+            {e.note && <em> — {e.note}</em>}
+          </li>
+        ))}
+      </ul>
     );
   }
 
-  // === FULL VIEW ===
+  // FULL PAGE — TABLE + FORM
   return (
     <div>
       <h2>Diaper & Feeding Log</h2>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
-        <label>
-          Type:
-          <select value={type} onChange={(e) => setType(e.target.value)}>
-            <option value="diaper">Diaper</option>
-            <option value="feeding">Feeding</option>
-          </select>
-        </label>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          gap: 12,
+          alignItems: "center",
+        }}
+      >
+        <Select
+          size="small"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        >
+          <MenuItem value="diaper">Diaper</MenuItem>
+          <MenuItem value="feeding">Feeding</MenuItem>
+        </Select>
 
-        <label>
-          {type === "diaper" ? "Wet/Dry" : "Bottle/Breast"}:
-          <input
-            type="text"
-            value={subtype}
-            onChange={(e) => setSubtype(e.target.value)}
-            placeholder={
-              type === "diaper" ? "wet / dry / both" : "bottle / breast / oz"
-            }
-          />
-        </label>
+        <TextField
+          size="small"
+          label={type === "diaper" ? "Wet/Dry/Both" : "Bottle/Breast/oz"}
+          value={subtype}
+          onChange={(e) => setSubtype(e.target.value)}
+        />
 
-        <label>
-          Notes:
-          <input
-            type="text"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="optional note"
-          />
-        </label>
+        <TextField
+          size="small"
+          label="Notes"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
 
-        <button type="submit">Log Entry</button>
+        <Button type="submit" variant="contained">
+          Log Entry
+        </Button>
       </form>
 
-      <ul>
-        {entries.map((entry) => (
-          <li key={entry.id} style={{ marginBottom: "0.5rem" }}>
-            <strong>{formatTime(entry.timestamp)}</strong> — {entry.type} (
-            {entry.subtype}){entry.note && <em> — {entry.note}</em>}
-          </li>
-        ))}
-      </ul>
+      <TableContainer component={Paper} elevation={0}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Time</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Detail</TableCell>
+              <TableCell>Notes</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {entries.map((e) => (
+              <TableRow key={e.id}>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>
+                  {formatTime(e.timestamp)}
+                </TableCell>
+                <TableCell sx={{ textTransform: "capitalize" }}>
+                  {e.type}
+                </TableCell>
+                <TableCell>{e.subtype}</TableCell>
+                <TableCell>{e.note}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
