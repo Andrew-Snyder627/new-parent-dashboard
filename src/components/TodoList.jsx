@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
-
-// Shared styles
-const cardStyle = {
-  border: "1px solid #ccc",
-  padding: "1rem",
-  borderRadius: "8px",
-};
+import styles from "../styles/Page.module.css";
+import {
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function TodoList({ preview = false }) {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("parentTodoList");
     return saved ? JSON.parse(saved) : [];
   });
-
   const [newTask, setNewTask] = useState("");
 
   useEffect(() => {
@@ -34,78 +40,96 @@ function TodoList({ preview = false }) {
 
   const toggleTask = useCallback((id) => {
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, done: !task.done } : task
-      )
+      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
     );
   }, []);
 
   const deleteTask = useCallback((id) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // === PREVIEW MODE ===
   if (preview) {
-    const topTasks = tasks.slice(0, 3);
+    const top = tasks.slice(0, 3);
+    if (!top.length)
+      return <Typography sx={{ m: 0 }}>No tasks yet.</Typography>;
     return (
-      <div style={cardStyle}>
-        <h3>Parenting To-Do List</h3>
-        {topTasks.length === 0 ? (
-          <p>No tasks yet.</p>
-        ) : (
-          <ul>
-            {topTasks.map((task) => (
-              <li key={task.id}>
-                <input type="checkbox" checked={task.done} readOnly />
-                {` ${task.text}`}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div style={{ marginTop: "0.5rem" }}>
-          <Link to="/todos">View Full To-Do List</Link>
-        </div>
-      </div>
+      <List dense sx={{ py: 0 }}>
+        {top.map((t) => (
+          <ListItem key={t.id} disableGutters>
+            <ListItemIcon sx={{ minWidth: 32 }}>
+              <Checkbox
+                edge="start"
+                checked={t.done}
+                tabIndex={-1}
+                disableRipple
+                readOnly
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary={t.text}
+              primaryTypographyProps={{
+                sx: { textDecoration: t.done ? "line-through" : "none" },
+              }}
+            />
+          </ListItem>
+        ))}
+      </List>
     );
   }
 
-  // === FULL VIEW ===
+  // full page
   return (
-    <div>
-      <h2>Parenting To-Do List</h2>
+    <div className={styles.container}>
+      <Typography variant="h4" className={styles.header}>
+        Parenting To-Do List
+      </Typography>
 
-      <form onSubmit={handleAddTask} style={{ marginBottom: "1rem" }}>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add new task"
-        />
-        <button type="submit">Add</button>
+      <form onSubmit={handleAddTask} style={{ marginBottom: 16 }}>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <TextField
+            size="small"
+            label="Add new task"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+          />
+          <Button type="submit" variant="contained">
+            Add
+          </Button>
+        </Stack>
       </form>
 
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id} style={{ marginBottom: "0.5rem" }}>
-            <label
-              style={{ textDecoration: task.done ? "line-through" : "none" }}
+      <Paper variant="outlined">
+        <List>
+          {tasks.map((t) => (
+            <ListItem
+              key={t.id}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTask(t.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
             >
-              <input
-                type="checkbox"
-                checked={task.done}
-                onChange={() => toggleTask(task.id)}
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <Checkbox
+                  edge="start"
+                  checked={t.done}
+                  onChange={() => toggleTask(t.id)}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary={t.text}
+                primaryTypographyProps={{
+                  sx: { textDecoration: t.done ? "line-through" : "none" },
+                }}
               />
-              {` ${task.text}`}
-            </label>
-            <button
-              onClick={() => deleteTask(task.id)}
-              style={{ marginLeft: "0.5rem" }}
-            >
-              ❌
-            </button>
-          </li>
-        ))}
-      </ul>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     </div>
   );
 }

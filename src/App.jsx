@@ -5,7 +5,7 @@ import VaccineSchedule from "./components/VaccineSchedule";
 import DiaperLog from "./components/DiaperLog";
 import MilestoneTracker from "./components/MilestoneTracker";
 import TodoList from "./components/TodoList";
-import QuoteBox from "./components/QuoteBox";
+import Quotes from "./components/Quotes";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
         <Route path="/log" element={<DiaperLog />} />
         <Route path="/milestones" element={<MilestoneTracker />} />
         <Route path="/todos" element={<TodoList />} />
-        <Route path="/quotes" element={<QuoteBox />} />
+        <Route path="/quotes" element={<Quotes />} />
 
         {/* Catch-all redirect to dashboard */}
         <Route path="*" element={<Navigate to="/" replace />} />
